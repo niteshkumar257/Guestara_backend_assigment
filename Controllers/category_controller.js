@@ -2,6 +2,7 @@ import { client } from "../Db/dbconfig.js";
 import { asyncHandler } from "../Utils/async_handler.js";
 import CustomeError from "../Utils/cutsom_error.js";
 
+// getAllCategory
 export const getAllCategories = asyncHandler(async (req, res) => {
   const query_string = `select *from Category`;
   const data = await client.query(query_string);
@@ -10,23 +11,33 @@ export const getAllCategories = asyncHandler(async (req, res) => {
   });
 });
 
+// getCategoryById
 export const getCategoryById = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  if (!id) {
+  const { tax_applicability } = req.query;
+  if (isNaN(id)) {
     const error = new CustomeError("Please send a valid id", 400);
     return next(error);
   }
-  const query_string = `select * from Category where id=$1`;
-  const data = await client.query(query_string, [id]);
+  let query_string = `select * from Category where id=$1 `;
+  let values = [];
+  values.push(id);
+  if (tax_applicability) {
+    query_string += "and tax_applicability=$2";
+    values.push(tax_applicability);
+  }
+  console.log(query_string);
+  const data = await client.query(query_string, values);
   res.status(200).json({
     data: data.rows,
   });
 });
 
+// createCategory
 export const createCategory = asyncHandler(async (req, res) => {
   const { name, image, description, tax_applicability, tax_type, tax } =
     req.body;
-  console.log(name, image, description, tax_applicability, tax_type, tax);
+
   const query_string = `insert into Category (name, image_url, description, tax_applicability, tax_type, tax) values ($1,$2,$3,$4,$5,$6)`;
   await client.query(query_string, [
     name,
@@ -41,15 +52,14 @@ export const createCategory = asyncHandler(async (req, res) => {
   });
 });
 
-// categoryController.js
-
+// updateCategory
 export const updateCategory = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
-  console.log(id);
+
   const { name, image, description, tax_applicability, tax_type, tax } =
     req.body;
 
-  if (!id) {
+  if (isNaN(id)) {
     const error = new CustomeError("Please provide a valid category ID", 400);
     return next(error);
   }
@@ -57,43 +67,39 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
   let query_string = "update category set";
 
   const values = [];
-  let param
+  let parameter_number = 1;
 
   if (name) {
-    query_string += " name = $1,";
+    query_string += ` name = $${parameter_number++},`;
     values.push(name);
   }
   if (image) {
-    query_string += " image_url = $2,";
+    query_string += ` image_url = $${parameter_number++},`;
     values.push(image);
   }
   if (description) {
-    query_string += " description = $3,";
+    query_string += `description = $${parameter_number++},`;
     values.push(description);
   }
   if (tax_applicability !== undefined) {
-    query_string += " tax_applicability = $4,";
+    query_string += `tax_applicability = $${parameter_number++},`;
     values.push(tax_applicability);
   }
   if (tax_type) {
-    query_string += " tax_type = $5,";
+    query_string += ` tax_type = $${parameter_number++},`;
     values.push(tax_type);
   }
-  if (tax !== undefined) {
-    query_string += " tax = $6,";
+  if (tax) {
+    query_string += ` tax = $${parameter_number++},`;
     values.push(tax);
   }
 
-  // Remove the trailing comma from the SQL query
   query_string = query_string.slice(0, -1);
 
-  // Add the WHERE clause to specify the category ID
-  query_string += " WHERE id = $7";
+  query_string += ` WHERE id = $${parameter_number++}`;
 
-  // Add the category ID to the values array
   values.push(id);
 
-  // Execute the update query
   await client.query(query_string, values);
 
   res.json({ message: "Category updated successfully" });
