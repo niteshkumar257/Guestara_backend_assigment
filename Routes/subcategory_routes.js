@@ -9,7 +9,7 @@ import {
 } from "../Controllers/Subcategory_controller.js";
 
 router.get("/subcategories", getAllSubCategories);
-router.get("/subcategories/id/:id", getSubCategoryById);
+router.get("/subcategories/:id", getSubCategoryById);
 router.get("/subcategories/category/:categoryId", getSubCategoryByCategoryId);
 router.post("/subcategories", createSubCategory);
 router.put("/subcategories/:id", updateSubCategory);

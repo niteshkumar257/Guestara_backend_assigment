@@ -26,9 +26,17 @@ export const getCategoryById = asyncHandler(async (req, res, next) => {
     query_string += "and tax_applicability=$2";
     values.push(tax_applicability);
   }
-  console.log(query_string);
+
   const data = await client.query(query_string, values);
+  if(data.rows.length==0)
+    {
+      return res.status(400).json({
+        status:"error",
+        message:'No Category found '
+      })
+    }
   res.status(200).json({
+    status:'sucess',
     data: data.rows,
   });
 });
@@ -56,6 +64,7 @@ export const createCategory = asyncHandler(async (req, res) => {
     tax,
   ]);
   res.status(201).json({
+    status:'sucsess',
     message: "Category created Succesfully",
   });
 });
@@ -120,5 +129,5 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
 
   await client.query(query_string, values);
 
-  res.json({ message: "Category updated successfully" });
+  res(200).json({status:'success',  message: "Category updated successfully" });
 });

@@ -12,11 +12,19 @@ export const getAllItems = asyncHandler(async (req, res) => {
 
 export const getItemById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const query_string = `select * from item where id=$1 `;
+  const query_string = `SELECT * FROM item WHERE id=$1`;
   const data = await client.query(query_string, [id]);
+
+  if (data.rows.length == 0) {
+    return res.status(400).json({
+      status: "error",
+      data: "No Items found",
+    });
+  }
+
   res.status(200).json({
-    status: "sucess",
-    data: data.rows,
+    status: "success",
+    data: data.rows[0], // Return the first item if exists
   });
 });
 
@@ -63,7 +71,6 @@ export const createItem = asyncHandler(async (req, res) => {
 
 export const updateItem = async (req, res) => {
   const id = req.params.id;
- 
 
   const {
     name,
@@ -79,17 +86,15 @@ export const updateItem = async (req, res) => {
   if (isNaN(id)) {
     const error = new CustomeError("Please provide a valid category ID", 400);
     return next(error);
-  } 
-  let query_string_item=`select *from item where id=$1`;
-  const data=await client.query(query_string_item,[id]);
-  if(data.rows.length==0)
-    {
-
-    return  res.status(400).json({
-        status:"fail",
-        message:'No item belong to this id'
-      })
-    }
+  }
+  let query_string_item = `select *from item where id=$1`;
+  const data = await client.query(query_string_item, [id]);
+  if (data.rows.length == 0) {
+    return res.status(400).json({
+      status: "fail",
+      message: "No item belong to this id",
+    });
+  }
   let query_string = "update item set";
 
   const values = [];
@@ -142,8 +147,15 @@ export const updateItem = async (req, res) => {
 
 export const getItemsByCategoryId = asyncHandler(async (req, res) => {
   const { categoryId } = req.params;
+  console.log(categoryId);
   const query_string = `select * from item where category_id=$1 `;
   const data = await client.query(query_string, [categoryId]);
+  if (data.rows.length == 0) {
+    return res.status(400).json({
+      status: "error",
+      data: "No Items found",
+    });
+  }
   res.status(200).json({
     status: "sucess",
     data: data.rows,
@@ -153,6 +165,12 @@ export const getItemsBySubcategoryId = asyncHandler(async (req, res) => {
   const { subcategoryId } = req.params;
   const query_string = `select *from item where subcategory_id=$1`;
   const data = await client.query(query_string, [subcategoryId]);
+  if (data.rows.length == 0) {
+    return res.status(400).json({
+      status: "error",
+      data: "No Items found",
+    });
+  }
   res.status(200).json({
     status: "success",
     data: data.rows,
@@ -160,7 +178,8 @@ export const getItemsBySubcategoryId = asyncHandler(async (req, res) => {
 });
 
 export const getItemByName = asyncHandler(async (req, res) => {
-  const { name } = req.body;
+  let { name } = req.body;
+   name=String(name);
   const query_string = `select *from item where name=$1`;
   const data = await client.query(query_string, [name]);
   res.status(200).json({

@@ -9,8 +9,9 @@ import errorHandler from "./Utils/error_middleware.js";
 import CustomeError from "./Utils/cutsom_error.js";
 
 
+
 dotenv.config();
-// dotenve configuration
+// dotenv configuration
 
 const app = express();
 const port = process.env.PORT || 8000;
