@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true })); // to decode the url special ch
 
 // routes
 app.use("/api/v1/category", categoryRouter);
-app.use("api/v1/subcategory", subCategoryRouter);
+app.use("/api/v1/subcategory", subCategoryRouter);
 app.use("/api/v1/items", itemsRouter);
 
 app.all("*",(req,res,next)=>{
