@@ -1,10 +1,21 @@
 Q1) Which database you have chosen and why?
 
+--> I have Postgresql (SQL database) ,because as the elements such Category,Subcatergory and Items are structured data 
+    and dependent with each ,to get the hight integrity and consistancey I used the sql database and No-sql database
+--> In sql database read operation are less expensive as compare to the Nosql database as the assigment and problem     it self requires lots of read operation as compare to the write operation
+
 
 Q2) 3 things that you learned from this assignment?
 
+  --> Global Error handling
+  --> Swagger Documentation
+  
 
 Q3)What was the most difficult part of the assignment?
 
+A ) Datbase desing is not difficult but most important part of the assignment ,from choosing to creating the table for category ,subcategory and Item
+
 
 Q4)What you would have done differently given more time?
+
+A ) I want to host both the database ans backend api's into the Aws RDS and EC2 and dockerize both of them ,use caching  (Redis) 
