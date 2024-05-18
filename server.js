@@ -7,7 +7,7 @@ import subCategoryRouter from "./Routes/subcategory_routes.js";
 import itemsRouter from "./Routes/items_routes.js";
 import errorHandler from "./Utils/error_middleware.js";
 import CustomeError from "./Utils/cutsom_error.js";
-import setupSwagger from "./swagger.js";
+
 
 dotenv.config();
 // dotenve configuration
@@ -25,7 +25,7 @@ app.use(
 
 app.use(express.json({ limit: "16kb" })); // json body
 app.use(express.urlencoded({ extended: true })); // to decode the url special character
-setupSwagger(app);
+
 
 // routes
 app.use("/api/v1/category", categoryRouter);
