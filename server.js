@@ -7,8 +7,10 @@ import subCategoryRouter from "./Routes/subcategory_routes.js";
 import itemsRouter from "./Routes/items_routes.js";
 import errorHandler from "./Utils/error_middleware.js";
 import CustomeError from "./Utils/cutsom_error.js";
+import setupSwagger from "./swagger.js";
 
 dotenv.config();
+// dotenve configuration
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -18,34 +20,26 @@ app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
   })
+  // all origins are allowed
 );
 
 app.use(express.json({ limit: "16kb" })); // json body
 app.use(express.urlencoded({ extended: true })); // to decode the url special character
-
+setupSwagger(app);
 
 // routes
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/subcategory", subCategoryRouter);
-app.use("/api/v1/items", itemsRouter);
+app.use("/api/v1/item", itemsRouter);
 
-app.all("*",(req,res,next)=>{
-  // res.status(404).json({
-  //   status:"fails",
-  //   message:`No route found ${req.originalUrl}`
-  // })
-  // const error=new Error(`no router out there ${req.originalUrl}`);
-  // error.status=404;
-
-  const error=new CustomeError(`no router out there ${req.originalUrl}`,404)
+// to handle all invalid routes
+app.all("*", (req, res, next) => {
+  const error = new CustomeError(`no router out there ${req.originalUrl}`, 404);
   next(error);
+});
 
-})
-
-// error handling 
-app.use(errorHandler)
-
-
+// error handling
+app.use(errorHandler);
 
 // connect database
 connectDb()

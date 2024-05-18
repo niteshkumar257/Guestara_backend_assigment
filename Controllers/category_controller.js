@@ -35,6 +35,14 @@ export const getCategoryById = asyncHandler(async (req, res, next) => {
 
 // createCategory
 export const createCategory = asyncHandler(async (req, res) => {
+
+// Name: String
+// Image: URL
+// Description: String
+// Tax Applicability: Boolean
+// Tax: Number, if applicable
+// Tax type
+
   const { name, image, description, tax_applicability, tax_type, tax } =
     req.body;
 
@@ -63,6 +71,16 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
     const error = new CustomeError("Please provide a valid category ID", 400);
     return next(error);
   }
+  const query_string_category=`select *from category where id=$1`;
+  const data=await client.query(query_string_category,[id]);
+  if(data.rows.length==0)
+    {
+    
+    return   res.status(404).json({
+        status:"fail",
+        message:'No category belong to this id'
+      })
+    }
 
   let query_string = "update category set";
 
