@@ -27,4 +27,5 @@ Before you begin, ensure you have the following installed:
    copy the the secret keys from the .env.example file to the env file 
 
 4 **All the Api's can be test using the above url in the swagger Ui**
+
   https://guestara-backend-assigment.onrender.com/api-docs/#/
