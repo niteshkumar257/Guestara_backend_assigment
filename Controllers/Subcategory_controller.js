@@ -26,7 +26,7 @@ export const getSubCategoryById = asyncHandler(async (req, res) => {
     data: data.rows,
   });
 });
-export const createSubCategory = asyncHandler(async (req, res) => {
+export const createSubCategory = asyncHandler(async (req, res,next) => {
   // Name: String
   // Image: URL
   // Description: String
@@ -51,6 +51,13 @@ export const createSubCategory = asyncHandler(async (req, res) => {
   const { name, image, description, tax_applicability, tax, category_id } =
     req.body;
 
+  const query_string_category_id=`select * from Category where id=$1`;
+  const data=await client.query(query_string_category_id,[category_id]);
+  if(data.rows.length==0)
+    {
+      const error = new CustomeError("Invalid category id no item found ", 400);
+      return next(error);
+    }
   const query_string = `insert into Subcategory (category_id,name, image_url, description, tax_applicability, tax) values ($1,$2,$3,$4,$5,$6)`;
   await client.query(query_string, [
     category_id,
@@ -70,7 +77,7 @@ export const updateSubCategory = asyncHandler(async (req, res, next) => {
   const { name, image, description, tax_applicability, tax } = req.body;
 
   if (isNaN(id)) {
-    const error = new CustomeError("Please provide a valid category ID", 400);
+    const error = new CustomeError("Please provide a valid Subcategory ID", 400);
     return next(error);
   }
   const query_string_subcategory = `select *from Subcategory where id=$1`;

@@ -186,7 +186,30 @@ router.post("/subcategories", upload.single('image_url'), createSubCategory);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/SubCategory'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The subcategory name
+ *               image_url:
+ *                 type: string
+ *                 description: The URL of the subcategory image
+ *               description:
+ *                 type: string
+ *                 description: The description of the subcategory
+ *               tax_applicability:
+ *                 type: boolean
+ *                 description: Indicates if tax is applicable
+ *               tax:
+ *                 type: number
+ *                 description: The tax amount, if applicable
+ *               tax_type:
+ *                 type: string
+ *                 enum: [Income Tax, Sales Tax, Property Tax]
+ *                 description: The type of tax
+ *               category_id:
+ *                 type: integer
+ *                 description: The ID of the parent category
  *     responses:
  *       200:
  *         description: Subcategory updated successfully

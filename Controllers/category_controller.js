@@ -43,7 +43,7 @@ export const getCategoryById = asyncHandler(async (req, res, next) => {
 });
 
 // createCategory
-export const createCategory = asyncHandler(async (req, res) => {
+export const createCategory = asyncHandler(async (req, res,next) => {
   // Name: String
   // Image: URL
   // Description: String
@@ -57,7 +57,6 @@ export const createCategory = asyncHandler(async (req, res) => {
     localImagepath: path,
   });
 
-  console.log(image_url);
 
   if (!image_url) {
     const error = new CustomeError("Image upload unsuccesfull", 400);
@@ -86,7 +85,6 @@ export const createCategory = asyncHandler(async (req, res) => {
 export const updateCategory = asyncHandler(async (req, res, next) => {
   let id = req.params.id;
   id = Number(id);
-  console.log(id);
 
   const { name, image, description, tax_applicability, tax_type, tax } =
     req.body;

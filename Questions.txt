@@ -1,11 +1,11 @@
 Q1) Which database you have chosen and why?
 
---> I have Postgresql (SQL database) ,because as the elements such Category,Subcatergory and Items are structured data 
-    and dependent with each ,to get the hight integrity and consistancey I used the sql database and No-sql database
+--> I have used Postgresql (SQL database) ,because as the elements such Category,Subcatergory and Items are structured data 
+    and dependent with each other ,to get the integrity and consistancey in data I used the sql database and instead No-sql database
 --> In sql database read operation are less expensive as compare to the Nosql database as the assigment and problem     it self requires lots of read operation as compare to the write operation
 
 
-Q2) 3 things that you learned from this assignment?
+Q2) 2 things that I learned from this assignment?
 
   --> Global Error handling
   --> Swagger Documentation
@@ -13,9 +13,9 @@ Q2) 3 things that you learned from this assignment?
 
 Q3)What was the most difficult part of the assignment?
 
-A ) Datbase desing is not difficult but most important part of the assignment ,from choosing database to creating the table for category ,subcategory and Item
+A ) Datbase designing is not difficult part but the most important part of the assignment ,from choosing database to   defining the Schema for category ,subcategory and Item
 
 
 Q4)What you would have done differently given more time?
 
-A ) I want to host both the database ans backend api's into the Aws RDS and EC2 with dockerizing both of them ,and also to store the image on s3 but now I used the cloudinary to store the images ,also want to use caching (Redis) for read operation 
+A ) I want to host both the database ans backend api's into the Aws RDS and EC2 with dockerizing both of them ,and also want to store the images on s3 but now I used the cloudinary to store the images ,also want to use caching (Redis) for read operation 

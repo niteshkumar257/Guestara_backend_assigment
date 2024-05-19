@@ -29,7 +29,7 @@ export const getItemById = asyncHandler(async (req, res) => {
   });
 });
 
-export const createItem = asyncHandler(async (req, res) => {
+export const createItem = asyncHandler(async (req, res, next) => {
   // Name: String
   // Image: URL
   // Description: String
@@ -45,13 +45,10 @@ export const createItem = asyncHandler(async (req, res) => {
     localImagepath: path,
   });
 
-  console.log(image_url);
-
   if (!image_url) {
     const error = new CustomeError("Image upload unsuccesfull", 400);
     return next(error);
   }
-
 
   const {
     name,
@@ -65,17 +62,25 @@ export const createItem = asyncHandler(async (req, res) => {
     category_id,
     subcategory_id,
   } = req.body;
+  const query_string_category_id=`select * from Category where id=$1`;
+  const data=await client.query(query_string_category_id,[category_id]);
+  if(data.rows.length==0)
+    {
+      const error = new CustomeError("Invalid category id no item found ", 400);
+      return next(error);
+    }
 
-  console.log( name,
-    image,
-    description,
-    tax_applicability,
-    tax,
-    base_amount,
-    discount,
-    total_amount,
-    category_id,
-    subcategory_id);
+  if(subcategory_id)
+    {
+      const query_string_category_id=`select * from Subcategory where id=$1 and category_id=$2`;
+  const data=await client.query(query_string_category_id,[subcategory_id,category_id]);
+  if(data.rows.length==0)
+    {
+      const error = new CustomeError("Invalid category id or subcategory id no item found ", 400);
+      return next(error);
+    }
+
+    }
   const query_string = `insert into item (category_id,subcategory_id,name, image_url, description, tax_applicability,tax,base_amount,discount,total_amount) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`;
   await client.query(query_string, [
     category_id,
@@ -163,7 +168,6 @@ export const updateItem = async (req, res) => {
   query_string += ` WHERE id = $${parameter_number++}`;
 
   values.push(id);
-  console.log(query_string);
 
   await client.query(query_string, values);
 
@@ -172,7 +176,7 @@ export const updateItem = async (req, res) => {
 
 export const getItemsByCategoryId = asyncHandler(async (req, res) => {
   const { categoryId } = req.params;
-  console.log(categoryId);
+
   const query_string = `select * from item where category_id=$1 `;
   const data = await client.query(query_string, [categoryId]);
   if (data.rows.length == 0) {
@@ -204,8 +208,8 @@ export const getItemsBySubcategoryId = asyncHandler(async (req, res) => {
 
 export const getItemByName = asyncHandler(async (req, res) => {
   let { name } = req.query;
-   name=String(name);
-   console.log(name);
+  name = String(name);
+
   const query_string = `select *from item where name=$1`;
   const data = await client.query(query_string, [name]);
   res.status(200).json({
