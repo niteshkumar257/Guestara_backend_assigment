@@ -16,11 +16,11 @@ const client = new Client({
 
 const connectDb = async () => {
   try {
-   let res= await client.connect();
-   console.log(res);
+    await client.connect();
+ 
     console.log("Connected to the database");
   } catch (error) {
-    console.log(error);
+    
     console.error("Error connecting to the database:", error.message);
   }
 };

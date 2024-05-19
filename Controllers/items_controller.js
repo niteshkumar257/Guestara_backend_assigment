@@ -38,6 +38,20 @@ export const createItem = asyncHandler(async (req, res) => {
   // Discount: Number
   // Total Amount: Number (Base - Discount)
 
+  // const { path } = req.file;
+
+  // const image_url = await uploadToCloudinary({
+  //   localImagepath: path,
+  // });
+
+  // console.log(image_url);
+
+  // if (!image_url) {
+  //   const error = new CustomeError("Image upload unsuccesfull", 400);
+  //   return next(error);
+  // }
+
+
   const {
     name,
     image,

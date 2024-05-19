@@ -13,9 +13,9 @@ Q2) 3 things that you learned from this assignment?
 
 Q3)What was the most difficult part of the assignment?
 
-A ) Datbase desing is not difficult but most important part of the assignment ,from choosing to creating the table for category ,subcategory and Item
+A ) Datbase desing is not difficult but most important part of the assignment ,from choosing database to creating the table for category ,subcategory and Item
 
 
 Q4)What you would have done differently given more time?
 
-A ) I want to host both the database ans backend api's into the Aws RDS and EC2 and dockerize both of them ,use caching  (Redis) 
+A ) I want to host both the database ans backend api's into the Aws RDS and EC2 with dockerizing both of them ,and also to store the image on s3 but now I used the cloudinary to store the images ,also want to use caching (Redis) for read operation 

@@ -32,6 +32,21 @@ export const createSubCategory = asyncHandler(async (req, res) => {
   // Tax Applicability: Boolean, Default: Category tax applicability
   // Tax: Number, Default: Category tax number
 
+  // const { path } = req.file;
+
+  // const image_url = await uploadToCloudinary({
+  //   localImagepath: path,
+  // });
+
+  // // console.log(image_url);
+
+  // if (!image_url) {
+  //   const error = new CustomeError("Image upload unsuccesfull", 400);
+  //   return next(error);
+  // }
+
+
+
   const { name, image, description, tax_applicability, tax, category_id } =
     req.body;
 

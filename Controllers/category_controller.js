@@ -1,6 +1,7 @@
 import { client } from "../Db/dbconfig.js";
 import { asyncHandler } from "../Utils/async_handler.js";
 import CustomeError from "../Utils/cutsom_error.js";
+import { uploadToCloudinary } from "../Utils/cloudinar_image_upload.js";
 
 // getAllCategory
 export const getAllCategories = asyncHandler(async (req, res) => {
@@ -28,28 +29,42 @@ export const getCategoryById = asyncHandler(async (req, res, next) => {
   }
 
   const data = await client.query(query_string, values);
-  if(data.rows.length==0)
-    {
-      return res.status(400).json({
-        status:"error",
-        message:'No Category found '
-      })
-    }
+  if (data.rows.length == 0) {
+    return res.status(400).json({
+      status: "error",
+      message: "No Category found ",
+    });
+  }
   res.status(200).json({
-    status:'sucess',
+    status: "sucess",
     data: data.rows,
   });
 });
 
 // createCategory
 export const createCategory = asyncHandler(async (req, res) => {
+  // const { path } = req.file;
 
-// Name: String
-// Image: URL
-// Description: String
-// Tax Applicability: Boolean
-// Tax: Number, if applicable
-// Tax type
+  // const image_url = await uploadToCloudinary({
+  //   localImagepath: path,
+  // });
+
+  // console.log(image_url);
+
+  // if (!image_url) {
+  //   const error = new CustomeError("Image upload unsuccesfull", 400);
+  //   return next(error);
+  // }
+
+  // Name: String
+  // Image: URL
+  // Description: String
+  // Tax Applicability: Boolean
+  // Tax: Number, if applicable
+  // Tax type
+
+  // Note as of now ,I implemented the code here to upload the image to the cloudinary and get the link of hosted image as response and store it in the database
+  // but as we cannot send the formdata and body from the postman simultaneously so I just storing the dummy image url string directly in to the database
 
   const { name, image, description, tax_applicability, tax_type, tax } =
     req.body;
@@ -64,7 +79,7 @@ export const createCategory = asyncHandler(async (req, res) => {
     tax,
   ]);
   res.status(201).json({
-    status:'sucsess',
+    status: "sucsess",
     message: "Category created Succesfully",
   });
 });
@@ -80,16 +95,14 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
     const error = new CustomeError("Please provide a valid category ID", 400);
     return next(error);
   }
-  const query_string_category=`select *from category where id=$1`;
-  const data=await client.query(query_string_category,[id]);
-  if(data.rows.length==0)
-    {
-    
-    return   res.status(404).json({
-        status:"fail",
-        message:'No category belong to this id'
-      })
-    }
+  const query_string_category = `select *from category where id=$1`;
+  const data = await client.query(query_string_category, [id]);
+  if (data.rows.length == 0) {
+    return res.status(404).json({
+      status: "fail",
+      message: "No category belong to this id",
+    });
+  }
 
   let query_string = "update category set";
 
@@ -129,5 +142,8 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
 
   await client.query(query_string, values);
 
-  res(200).json({status:'success',  message: "Category updated successfully" });
+  res(200).json({
+    status: "success",
+    message: "Category updated successfully",
+  });
 });
