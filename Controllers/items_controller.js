@@ -1,6 +1,7 @@
 import { client } from "../Db/dbconfig.js";
 import { asyncHandler } from "../Utils/async_handler.js";
 import CustomeError from "../Utils/cutsom_error.js";
+import { uploadToCloudinary } from "../Utils/cloudinar_image_upload.js";
 export const getAllItems = asyncHandler(async (req, res) => {
   const query_string = `select * from item `;
   const data = await client.query(query_string);
@@ -38,18 +39,18 @@ export const createItem = asyncHandler(async (req, res) => {
   // Discount: Number
   // Total Amount: Number (Base - Discount)
 
-  // const { path } = req.file;
+  const { path } = req.file;
 
-  // const image_url = await uploadToCloudinary({
-  //   localImagepath: path,
-  // });
+  const image_url = await uploadToCloudinary({
+    localImagepath: path,
+  });
 
-  // console.log(image_url);
+  console.log(image_url);
 
-  // if (!image_url) {
-  //   const error = new CustomeError("Image upload unsuccesfull", 400);
-  //   return next(error);
-  // }
+  if (!image_url) {
+    const error = new CustomeError("Image upload unsuccesfull", 400);
+    return next(error);
+  }
 
 
   const {
@@ -70,7 +71,7 @@ export const createItem = asyncHandler(async (req, res) => {
     category_id,
     subcategory_id,
     name,
-    image,
+    image_url,
     description,
     tax_applicability,
     tax,
@@ -192,8 +193,9 @@ export const getItemsBySubcategoryId = asyncHandler(async (req, res) => {
 });
 
 export const getItemByName = asyncHandler(async (req, res) => {
-  let { name } = req.body;
+  let { name } = req.query;
    name=String(name);
+   console.log(name);
   const query_string = `select *from item where name=$1`;
   const data = await client.query(query_string, [name]);
   res.status(200).json({

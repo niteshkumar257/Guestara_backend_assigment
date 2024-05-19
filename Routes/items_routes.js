@@ -48,6 +48,12 @@ import upload from "../middleware/image_upload.js";
  *         total_amount:
  *           type: number
  *           description: The total amount of the item (Base - Discount)
+ *         category_id:
+ *           type: number
+ *           description: The category ID
+ *         subcategory_id:
+ *           type: number
+ *           description: The subcategory ID
  */
 
 /**
@@ -192,11 +198,18 @@ router.get("/items/subcategory/:subcategoryId", getItemsBySubcategoryId);
  *           schema:
  *             type: object
  *             required:
+ *               - category_id
  *               - name
  *               - description
  *               - base_amount
  *               - total_amount
  *             properties:
+ *               category_id:
+ *                 type: number
+ *                 description: Enter a valid category ID
+ *               subcategory_id:
+ *                 type: number
+ *                 description: Enter a valid subcategory ID
  *               name:
  *                 type: string
  *                 description: The item name
@@ -228,7 +241,7 @@ router.get("/items/subcategory/:subcategoryId", getItemsBySubcategoryId);
  *       400:
  *         description: Invalid input
  */
-router.post("/items", upload.single('image_url'), createItem);
+router.post("/items", upload.single("image_url"), createItem);
 
 /**
  * @swagger
@@ -248,7 +261,33 @@ router.post("/items", upload.single('image_url'), createItem);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Item'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The item name
+ *               image_url:
+ *                 type: string
+ *                 format: binary
+ *                 description: The URL of the item image
+ *               description:
+ *                 type: string
+ *                 description: The description of the item
+ *               tax_applicability:
+ *                 type: boolean
+ *                 description: Indicates if tax is applicable
+ *               tax:
+ *                 type: number
+ *                 description: The tax amount, if applicable
+ *               base_amount:
+ *                 type: number
+ *                 description: The base amount of the item
+ *               discount:
+ *                 type: number
+ *                 description: The discount amount on the item
+ *               total_amount:
+ *                 type: number
+ *                 description: The total amount of the item (Base - Discount)
  *     responses:
  *       200:
  *         description: Item updated successfully

@@ -132,6 +132,7 @@ router.get("/categories/:id", getCategoryById);
  */
 router.post("/addCategory", upload.single('image_url'), createCategory);
 
+
 /**
  * @swagger
  * /api/v1/category/updateCategory/{id}:
@@ -150,7 +151,27 @@ router.post("/addCategory", upload.single('image_url'), createCategory);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Category'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The category name
+ *               image_url:
+ *                 type: string
+ *                 format: binary
+ *                 description: The URL of the category image
+ *               description:
+ *                 type: string
+ *                 description: The description of the category
+ *               tax_applicability:
+ *                 type: boolean
+ *                 description: Indicates if tax is applicable
+ *               tax:
+ *                 type: number
+ *                 description: The tax amount, if applicable
+ *               tax_type:
+ *                 type: string
+ *                 description: The type of tax
  *     responses:
  *       200:
  *         description: Category updated successfully

@@ -142,7 +142,7 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
 
   await client.query(query_string, values);
 
-  res(200).json({
+  res.status(200).json({
     status: "success",
     message: "Category updated successfully",
   });
