@@ -1,6 +1,7 @@
 import { asyncHandler } from "../Utils/async_handler.js";
 import { client } from "../Db/dbconfig.js";
 import CustomeError from "../Utils/cutsom_error.js";
+import { uploadToCloudinary } from "../Utils/cloudinar_image_upload.js";
 export const getAllSubCategories = asyncHandler(async (req, res) => {
   const query_string = `select *from Subcategory`;
   const data = await client.query(query_string);
@@ -32,18 +33,18 @@ export const createSubCategory = asyncHandler(async (req, res) => {
   // Tax Applicability: Boolean, Default: Category tax applicability
   // Tax: Number, Default: Category tax number
 
-  // const { path } = req.file;
+  const { path } = req.file;
 
-  // const image_url = await uploadToCloudinary({
-  //   localImagepath: path,
-  // });
+  const image_url = await uploadToCloudinary({
+    localImagepath: path,
+  });
 
-  // // console.log(image_url);
+  // console.log(image_url);
 
-  // if (!image_url) {
-  //   const error = new CustomeError("Image upload unsuccesfull", 400);
-  //   return next(error);
-  // }
+  if (!image_url) {
+    const error = new CustomeError("Image upload unsuccesfull", 400);
+    return next(error);
+  }
 
 
 
@@ -54,7 +55,7 @@ export const createSubCategory = asyncHandler(async (req, res) => {
   await client.query(query_string, [
     category_id,
     name,
-    image,
+    image_url,
     description,
     tax_applicability,
     tax,
@@ -90,10 +91,7 @@ export const updateSubCategory = asyncHandler(async (req, res, next) => {
     query_string += ` name = $${parameter_number++},`;
     values.push(name);
   }
-  if (image) {
-    query_string += ` image_url = $${parameter_number++},`;
-    values.push(image);
-  }
+ 
   if (description) {
     query_string += `description = $${parameter_number++},`;
     values.push(description);

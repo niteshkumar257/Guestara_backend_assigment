@@ -201,7 +201,10 @@ router.get("/items/subcategory/:subcategoryId", getItemsBySubcategoryId);
  *               - category_id
  *               - name
  *               - description
+ *               - image_url
+ *               - tax_applicability
  *               - base_amount
+ *               - discount
  *               - total_amount
  *             properties:
  *               category_id:

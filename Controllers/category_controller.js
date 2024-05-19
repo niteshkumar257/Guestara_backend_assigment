@@ -8,7 +8,8 @@ export const getAllCategories = asyncHandler(async (req, res) => {
   const query_string = `select *from Category`;
   const data = await client.query(query_string);
   res.status(200).json({
-    data: data.rows,
+    status: "success",
+    category_list: data.rows,
   });
 });
 
@@ -37,25 +38,12 @@ export const getCategoryById = asyncHandler(async (req, res, next) => {
   }
   res.status(200).json({
     status: "sucess",
-    data: data.rows,
+    category_list: data.rows,
   });
 });
 
 // createCategory
 export const createCategory = asyncHandler(async (req, res) => {
-  // const { path } = req.file;
-
-  // const image_url = await uploadToCloudinary({
-  //   localImagepath: path,
-  // });
-
-  // console.log(image_url);
-
-  // if (!image_url) {
-  //   const error = new CustomeError("Image upload unsuccesfull", 400);
-  //   return next(error);
-  // }
-
   // Name: String
   // Image: URL
   // Description: String
@@ -63,8 +51,18 @@ export const createCategory = asyncHandler(async (req, res) => {
   // Tax: Number, if applicable
   // Tax type
 
-  // Note as of now ,I implemented the code here to upload the image to the cloudinary and get the link of hosted image as response and store it in the database
-  // but as we cannot send the formdata and body from the postman simultaneously so I just storing the dummy image url string directly in to the database
+  const { path } = req.file;
+
+  const image_url = await uploadToCloudinary({
+    localImagepath: path,
+  });
+
+  console.log(image_url);
+
+  if (!image_url) {
+    const error = new CustomeError("Image upload unsuccesfull", 400);
+    return next(error);
+  }
 
   const { name, image, description, tax_applicability, tax_type, tax } =
     req.body;
@@ -72,7 +70,7 @@ export const createCategory = asyncHandler(async (req, res) => {
   const query_string = `insert into Category (name, image_url, description, tax_applicability, tax_type, tax) values ($1,$2,$3,$4,$5,$6)`;
   await client.query(query_string, [
     name,
-    image,
+    image_url,
     description,
     tax_applicability,
     tax_type,
@@ -86,7 +84,9 @@ export const createCategory = asyncHandler(async (req, res) => {
 
 // updateCategory
 export const updateCategory = asyncHandler(async (req, res, next) => {
-  const id = req.params.id;
+  let id = req.params.id;
+  id = Number(id);
+  console.log(id);
 
   const { name, image, description, tax_applicability, tax_type, tax } =
     req.body;
@@ -134,11 +134,14 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
     values.push(tax);
   }
 
+
   query_string = query_string.slice(0, -1);
 
   query_string += ` WHERE id = $${parameter_number++}`;
 
   values.push(id);
+
+
 
   await client.query(query_string, values);
 

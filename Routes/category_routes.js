@@ -104,6 +104,8 @@ router.get("/categories/:id", getCategoryById);
  *             required:
  *               - name
  *               - description
+ *               - image_url
+ *               - tax_applicability
  *             properties:
  *               name:
  *                 type: string
@@ -123,6 +125,7 @@ router.get("/categories/:id", getCategoryById);
  *                 description: The tax amount, if applicable
  *               tax_type:
  *                 type: string
+ *                 enum: [Income Tax, Sales Tax, Property Tax,Corporate Tax]
  *                 description: The type of tax
  *     responses:
  *       201:
@@ -158,7 +161,6 @@ router.post("/addCategory", upload.single('image_url'), createCategory);
  *                 description: The category name
  *               image_url:
  *                 type: string
- *                 format: binary
  *                 description: The URL of the category image
  *               description:
  *                 type: string
@@ -171,6 +173,7 @@ router.post("/addCategory", upload.single('image_url'), createCategory);
  *                 description: The tax amount, if applicable
  *               tax_type:
  *                 type: string
+ *                 enum: [Income Tax, Sales Tax, Property Tax, Corporate Tax]
  *                 description: The type of tax
  *     responses:
  *       200:

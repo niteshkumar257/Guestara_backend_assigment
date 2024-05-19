@@ -7,7 +7,7 @@ export const getAllItems = asyncHandler(async (req, res) => {
   const data = await client.query(query_string);
   res.status(200).json({
     status: "sucess",
-    data: data.rows,
+    item_list: data.rows,
   });
 });
 
@@ -25,7 +25,7 @@ export const getItemById = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     status: "success",
-    data: data.rows[0], // Return the first item if exists
+    item: data.rows[0], // Return the first item if exists
   });
 });
 
@@ -66,15 +66,25 @@ export const createItem = asyncHandler(async (req, res) => {
     subcategory_id,
   } = req.body;
 
+  console.log( name,
+    image,
+    description,
+    tax_applicability,
+    tax,
+    base_amount,
+    discount,
+    total_amount,
+    category_id,
+    subcategory_id);
   const query_string = `insert into item (category_id,subcategory_id,name, image_url, description, tax_applicability,tax,base_amount,discount,total_amount) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`;
   await client.query(query_string, [
     category_id,
-    subcategory_id,
+    subcategory_id || null,
     name,
     image_url,
     description,
     tax_applicability,
-    tax,
+    tax || null,
     base_amount,
     discount,
     total_amount,
@@ -173,7 +183,7 @@ export const getItemsByCategoryId = asyncHandler(async (req, res) => {
   }
   res.status(200).json({
     status: "sucess",
-    data: data.rows,
+    item_list: data.rows,
   });
 });
 export const getItemsBySubcategoryId = asyncHandler(async (req, res) => {
@@ -188,7 +198,7 @@ export const getItemsBySubcategoryId = asyncHandler(async (req, res) => {
   }
   res.status(200).json({
     status: "success",
-    data: data.rows,
+    item_list: data.rows,
   });
 });
 
@@ -200,6 +210,6 @@ export const getItemByName = asyncHandler(async (req, res) => {
   const data = await client.query(query_string, [name]);
   res.status(200).json({
     status: "success",
-    data: data.rows,
+    item_list: data.rows,
   });
 });
