@@ -24,8 +24,4 @@ Before you begin, ensure you have the following installed:
 3. **Copy the database credential from env.example file**   
    
    ```sh
-    user: "postgres",
-    password: "nitesh",
-    host: "localhost",
-    port: "5432",
-    database: "guestara",
+   copy the the secret keys from the .env.example file to the env file 

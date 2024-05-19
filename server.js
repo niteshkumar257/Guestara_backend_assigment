@@ -7,6 +7,8 @@ import subCategoryRouter from "./Routes/subcategory_routes.js";
 import itemsRouter from "./Routes/items_routes.js";
 import errorHandler from "./Utils/error_middleware.js";
 import CustomeError from "./Utils/cutsom_error.js";
+import {specs,options} from "./swagger.js"
+import swaggerUi from "swagger-ui-express";
 
 
 
@@ -26,6 +28,7 @@ app.use(
 
 app.use(express.json({ limit: "16kb" })); // json body
 app.use(express.urlencoded({ extended: true })); // to decode the url special character
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 
 // routes
