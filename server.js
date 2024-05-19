@@ -32,6 +32,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 
 // routes
+app.get("/",(req,res)=>{
+    res.status(200).json("Back-end Api's")
+})
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/subcategory", subCategoryRouter);
 app.use("/api/v1/item", itemsRouter);
