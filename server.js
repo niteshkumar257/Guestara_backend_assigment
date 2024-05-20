@@ -9,6 +9,7 @@ import errorHandler from "./Utils/error_middleware.js";
 import CustomeError from "./Utils/cutsom_error.js";
 import {specs,options} from "./swagger.js"
 import swaggerUi from "swagger-ui-express";
+import { requestLimiter } from "./middleware/rate_limite.js";
 
 
 
@@ -29,6 +30,9 @@ app.use(
 app.use(express.json({ limit: "16kb" })); // json body
 app.use(express.urlencoded({ extended: true })); // to decode the url special character
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+// rate limiting
+app.use('/api',requestLimiter);
 
 
 // routes
